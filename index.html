@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ethan Wilkinson — RF & Antenna Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0c0f;
+    --bg2: #111318;
+    --bg3: #191c23;
+    --border: rgba(255,255,255,0.07);
+    --border-bright: rgba(255,255,255,0.15);
+    --text: #e8eaf0;
+    --muted: #7a7f8e;
+    --accent: #00d4aa;
+    --accent2: #4f8ef7;
+    --accent3: #f7934f;
+    --accent-dim: rgba(0,212,170,0.1);
+    --mono: 'Space Mono', monospace;
+    --display: 'Syne', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--display);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Grid noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(10,12,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 3rem 5rem;
+    overflow: hidden;
+  }
+
+  .hero-bg-arc {
+    position: absolute;
+    right: -10%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,212,170,0.08);
+    pointer-events: none;
+  }
+  .hero-bg-arc::before {
+    content: '';
+    position: absolute;
+    inset: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,212,170,0.06);
+  }
+  .hero-bg-arc::after {
+    content: '';
+    position: absolute;
+    inset: 100px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,212,170,0.05);
+  }
+
+  /* Sine wave SVG */
+  .hero-wave {
+    position: absolute;
+    bottom: 3rem;
+    left: 0; right: 0;
+    opacity: 0.12;
+  }
+
+  .hero-content { position: relative; max-width: 720px; }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-desc {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #001a14;
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: #00f0c0; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border-bright);
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Stats row */
+  .stats {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  .stat {
+    flex: 1;
+    padding: 1.5rem 2rem;
+    border-right: 1px solid var(--border);
+  }
+  .stat:last-child { border-right: none; }
+
+  .stat-num {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Sections */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    margin-left: auto;
+    max-width: 200px;
+  }
+
+  /* Research cards */
+  .research-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .research-card {
+    background: var(--bg2);
+    padding: 2rem;
+    position: relative;
+    transition: background 0.2s;
+  }
+  .research-card:hover { background: var(--bg3); }
+
+  .research-card.featured {
+    background: linear-gradient(135deg, var(--bg3) 0%, rgba(0,212,170,0.05) 100%);
+    border-left: 2px solid var(--accent);
+  }
+
+  .card-status {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .status-active {
+    background: rgba(0,212,170,0.12);
+    color: var(--accent);
+    border: 1px solid rgba(0,212,170,0.25);
+  }
+  .status-upcoming {
+    background: rgba(79,142,247,0.12);
+    color: var(--accent2);
+    border: 1px solid rgba(79,142,247,0.25);
+  }
+  .status-planned {
+    background: rgba(122,127,142,0.12);
+    color: var(--muted);
+    border: 1px solid rgba(122,127,142,0.2);
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 1.25rem;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.05);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  /* Antenna visualiser placeholder */
+  .antenna-vis {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Projects grid */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .project-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.75rem;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .project-card.col-accent::before { background: var(--accent); }
+  .project-card.col-blue::before { background: var(--accent2); }
+  .project-card.col-orange::before { background: var(--accent3); }
+
+  .project-card:hover {
+    border-color: var(--border-bright);
+    transform: translateY(-2px);
+  }
+
+  .project-icon {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .project-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .project-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* Racing section */
+  .racing-banner {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .racing-content {
+    padding: 2.5rem;
+    border-right: 1px solid var(--border);
+  }
+
+  .racing-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(247,147,79,0.1);
+    border: 1px solid rgba(247,147,79,0.25);
+    color: var(--accent3);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    margin-bottom: 1.25rem;
+  }
+
+  .racing-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .racing-desc {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .racing-stats {
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .racing-stat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .racing-stat-num {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent3);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .racing-stat-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* Hobbies */
+  .hobbies-row {
+    display: flex;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .hobby {
+    flex: 1;
+    background: var(--bg2);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: background 0.2s;
+  }
+  .hobby:hover { background: var(--bg3); }
+
+  .hobby-icon-area {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+  }
+
+  .hobby-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .hobby-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* Contact */
+  .contact-section {
+    text-align: center;
+    padding: 5rem 3rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .contact-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .contact-section p {
+    color: var(--muted);
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    transition: all 0.2s;
+    letter-spacing: 0.06em;
+  }
+
+  .contact-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* Reveal animation */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-content > * {
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-tag    { animation-delay: 0.1s; }
+  h1           { animation-delay: 0.2s; }
+  .hero-desc   { animation-delay: 0.3s; }
+  .hero-links  { animation-delay: 0.4s; }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 6rem 1.5rem 3rem; }
+    section { padding: 3rem 1.5rem; }
+    .stats { flex-direction: column; }
+    .stat { border-right: none; border-bottom: 1px solid var(--border); }
+    .racing-banner { grid-template-columns: 1fr; }
+    .racing-content { border-right: none; border-bottom: 1px solid var(--border); }
+    .hobbies-row { flex-direction: column; }
+    .contact-section { padding: 3rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">EW_ELEC &gt;_</div>
+  <ul class="nav-links">
+    <li><a href="#research">Research</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#racing">Racing</a></li>
+    <li><a href="#hobbies">Hobbies</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-bg-arc"></div>
+
+  <div class="hero-content">
+    <div class="hero-tag">PhD Researcher · University of Birmingham</div>
+    <h1>Ethan<br><em>Wilkinson</em></h1>
+    <p class="hero-desc">
+      Designing novel antenna systems for thermoacoustic imaging — pushing the boundaries of RF engineering from waveguide design to full field characterisation.
+    </p>
+    <div class="hero-links">
+      <a href="https://github.com/EthanW-Elec" class="btn btn-primary" target="_blank">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.56 21.8 24 17.3 24 12 24 5.37 18.63 0 12 0z"/></svg>
+        GitHub
+      </a>
+      <a href="#research" class="btn btn-ghost">View Research</a>
+      <a href="#" class="btn btn-ghost">Download CV</a>
+    </div>
+  </div>
+
+  <!-- Sine wave decoration -->
+  <svg class="hero-wave" viewBox="0 0 1200 80" preserveAspectRatio="none" height="80">
+    <path d="M0,40 C100,10 200,70 300,40 C400,10 500,70 600,40 C700,10 800,70 900,40 C1000,10 1100,70 1200,40" fill="none" stroke="#00d4aa" stroke-width="1.5"/>
+    <path d="M0,40 C150,60 250,20 400,40 C550,60 650,20 800,40 C950,60 1050,20 1200,40" fill="none" stroke="#4f8ef7" stroke-width="0.75" opacity="0.5"/>
+  </svg>
+</div>
+
+<!-- Stats -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-num">2</div>
+    <div class="stat-label">Antenna Designs</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">1</div>
+    <div class="stat-label">Imaging System</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">Elec Lead</div>
+    <div class="stat-label">Brum Eco Racing</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">PhD</div>
+    <div class="stat-label">EE Researcher</div>
+  </div>
+</div>
+
+<!-- Research -->
+<section id="research">
+  <div class="section-header">
+    <span class="section-num">01 //</span>
+    <h2>Research</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <!-- Antenna visualiser -->
+  <div class="antenna-vis" style="height: 180px; margin-bottom: 2.5rem;">
+    <svg width="100%" height="140" viewBox="0 0 700 140" preserveAspectRatio="xMidYMid meet">
+      <!-- Waveguide body -->
+      <rect x="200" y="50" width="300" height="40" rx="3" fill="none" stroke="#00d4aa" stroke-width="1.5" opacity="0.6"/>
+      <rect x="200" y="54" width="300" height="32" rx="2" fill="rgba(0,212,170,0.04)"/>
+      <!-- Dielectric fill lines -->
+      <line x1="230" y1="54" x2="230" y2="86" stroke="#4f8ef7" stroke-width="0.75" opacity="0.4"/>
+      <line x1="260" y1="54" x2="260" y2="86" stroke="#4f8ef7" stroke-width="0.75" opacity="0.4"/>
+      <line x1="290" y1="54" x2="290" y2="86" stroke="#4f8ef7" stroke-width="0.75" opacity="0.4"/>
+      <line x1="320" y1="54" x2="320" y2="86" stroke="#4f8ef7" stroke-width="0.75" opacity="0.4"/>
+      <line x1="350" y1="54" x2="350" y2="86" stroke="#4f8ef7" stroke-width="0.75" opacity="0.4"/>
+      <line x1="380" y1="54" x2="380" y2="86" stroke="#4f8ef7" stroke-width="0.75" opacity="0.4"/>
+      <line x1="410" y1="54" x2="410" y2="86" stroke="#4f8ef7" stroke-width="0.75" opacity="0.4"/>
+      <line x1="440" y1="54" x2="440" y2="86" stroke="#4f8ef7" stroke-width="0.75" opacity="0.4"/>
+      <line x1="470" y1="54" x2="470" y2="86" stroke="#4f8ef7" stroke-width="0.75" opacity="0.4"/>
+      <!-- E-field radiation arcs -->
+      <path d="M500,70 Q540,40 570,70 Q540,100 500,70" fill="none" stroke="#00d4aa" stroke-width="1" opacity="0.5"/>
+      <path d="M500,70 Q560,20 600,70 Q560,120 500,70" fill="none" stroke="#00d4aa" stroke-width="0.75" opacity="0.3"/>
+      <path d="M500,70 Q580,5 630,70 Q580,135 500,70" fill="none" stroke="#00d4aa" stroke-width="0.5" opacity="0.2"/>
+      <!-- Input port -->
+      <rect x="155" y="45" width="45" height="50" rx="2" fill="none" stroke="#7a7f8e" stroke-width="1" opacity="0.5"/>
+      <line x1="155" y1="70" x2="130" y2="70" stroke="#7a7f8e" stroke-width="1.5" opacity="0.5"/>
+      <circle cx="120" cy="70" r="5" fill="none" stroke="#7a7f8e" stroke-width="1" opacity="0.5"/>
+      <!-- Labels -->
+      <text x="350" y="110" text-anchor="middle" font-family="Space Mono, monospace" font-size="10" fill="#7a7f8e" opacity="0.8">dielectric-filled waveguide</text>
+      <text x="120" y="95" text-anchor="middle" font-family="Space Mono, monospace" font-size="9" fill="#7a7f8e" opacity="0.6">port</text>
+      <text x="600" y="100" text-anchor="middle" font-family="Space Mono, monospace" font-size="9" fill="#00d4aa" opacity="0.7">E-field</text>
+    </svg>
+  </div>
+
+  <div class="research-grid">
+    <div class="research-card featured">
+      <span class="card-status status-active">Active</span>
+      <div class="card-title">Linearly Polarised Dielectric-Filled Waveguide</div>
+      <div class="card-desc">Design and simulation of a linearly polarised waveguide antenna with dielectric filling — the primary antenna architecture for thermoacoustic imaging investigations.</div>
+      <div class="card-tags">
+        <span class="tag">Waveguide</span>
+        <span class="tag">Linear Pol.</span>
+        <span class="tag">Dielectric</span>
+        <span class="tag">HFSS / CST</span>
+      </div>
+    </div>
+
+    <div class="research-card">
+      <span class="card-status status-upcoming">Up next</span>
+      <div class="card-title">Circularly Polarised Waveguide Antenna</div>
+      <div class="card-desc">Evolution of the LP design to achieve circular polarisation — enabling improved coupling efficiency and reduced standing wave artefacts in thermoacoustic imaging scenarios.</div>
+      <div class="card-tags">
+        <span class="tag">Waveguide</span>
+        <span class="tag">Circular Pol.</span>
+        <span class="tag">CP Design</span>
+      </div>
+    </div>
+
+    <div class="research-card">
+      <span class="card-status status-active">In progress</span>
+      <div class="card-title">E-Field Characterisation</div>
+      <div class="card-desc">Experimental near-field and far-field mapping of the waveguide antenna's electric field distribution — validating simulation models against measured radiation patterns.</div>
+      <div class="card-tags">
+        <span class="tag">Measurement</span>
+        <span class="tag">Near-field</span>
+        <span class="tag">VNA</span>
+        <span class="tag">Field Probe</span>
+      </div>
+    </div>
+
+    <div class="research-card">
+      <span class="card-status status-planned">Planned</span>
+      <div class="card-title">Thermoacoustic Imaging Results</div>
+      <div class="card-desc">Using the characterised waveguide antennas to generate and reconstruct thermoacoustic images — demonstrating the system's capability as a novel imaging modality.</div>
+      <div class="card-tags">
+        <span class="tag">TAI</span>
+        <span class="tag">Image Recon.</span>
+        <span class="tag">RF Exposure</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects" style="border-top: 1px solid var(--border);">
+  <div class="section-header">
+    <span class="section-num">02 //</span>
+    <h2>Side Projects</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="projects-grid">
+    <div class="project-card col-accent">
+      <div class="project-icon">⬡</div>
+      <div class="project-title">PCB Design & Fabrication</div>
+      <div class="project-desc">Learning the full PCB workflow — from schematic capture and layout in KiCad through to fabrication and bring-up. Targeting RF-friendly board techniques.</div>
+      <div class="card-tags" style="margin-top: 1rem;">
+        <span class="tag">KiCad</span>
+        <span class="tag">RF Layout</span>
+        <span class="tag">Fabrication</span>
+      </div>
+    </div>
+
+    <div class="project-card col-blue">
+      <div class="project-icon">◈</div>
+      <div class="project-title">RF Circuit Design</div>
+      <div class="project-desc">Designing and building RF front-end circuitry — filters, amplifiers, and matching networks relevant to microwave imaging and general RF engineering.</div>
+      <div class="card-tags" style="margin-top: 1rem;">
+        <span class="tag">RF Circuits</span>
+        <span class="tag">Matching</span>
+        <span class="tag">Filters</span>
+      </div>
+    </div>
+
+    <div class="project-card col-orange">
+      <div class="project-icon">◉</div>
+      <div class="project-title">Data Analytics</div>
+      <div class="project-desc">Building skills in Python-based data analysis and visualisation — applying techniques to antenna measurement data, signal processing, and research datasets.</div>
+      <div class="card-tags" style="margin-top: 1rem;">
+        <span class="tag">Python</span>
+        <span class="tag">NumPy</span>
+        <span class="tag">Matplotlib</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Racing -->
+<section id="racing" style="border-top: 1px solid var(--border);">
+  <div class="section-header">
+    <span class="section-num">03 //</span>
+    <h2>Brum Eco Racing</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="racing-banner">
+    <div class="racing-content">
+      <div class="racing-badge">
+        <span>▸</span> Electrical Team Lead
+      </div>
+      <div class="racing-title">University of Birmingham<br>Eco Racing Team</div>
+      <div class="racing-desc">
+        Leading the electrical team for Brum Eco Racing — responsible for the design, integration, and reliability of all electrical systems on the vehicle. Bridging hands-on engineering with project leadership and cross-disciplinary collaboration.
+      </div>
+      <div class="card-tags" style="margin-top: 1.5rem;">
+        <span class="tag">Power Electronics</span>
+        <span class="tag">Systems Integration</span>
+        <span class="tag">Team Leadership</span>
+        <span class="tag">Wiring Harness</span>
+      </div>
+    </div>
+    <div class="racing-stats">
+      <div class="racing-stat">
+        <div class="racing-stat-num">Elec Lead</div>
+        <div class="racing-stat-label">Role & responsibility</div>
+      </div>
+      <div class="racing-stat">
+        <div class="racing-stat-num">Eco</div>
+        <div class="racing-stat-label">Competition class</div>
+      </div>
+      <div class="racing-stat">
+        <div class="racing-stat-num">UoB</div>
+        <div class="racing-stat-label">University of Birmingham</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Hobbies -->
+<section id="hobbies" style="border-top: 1px solid var(--border);">
+  <div class="section-header">
+    <span class="section-num">04 //</span>
+    <h2>Outside the Lab</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="hobbies-row">
+    <div class="hobby">
+      <div class="hobby-icon-area" style="background: rgba(0,212,170,0.1);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-8 4 4 3-6 4 10"/><circle cx="19" cy="6" r="2"/></svg>
+      </div>
+      <div class="hobby-title">Hiking</div>
+      <div class="hobby-desc">Exploring trails and wild landscapes — a natural counterbalance to lab work and a source of perspective.</div>
+    </div>
+
+    <div class="hobby">
+      <div class="hobby-icon-area" style="background: rgba(79,142,247,0.1);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div class="hobby-title">Camping</div>
+      <div class="hobby-desc">Spending time off-grid — nights under open skies and building the practical skills that come with it.</div>
+    </div>
+
+    <div class="hobby">
+      <div class="hobby-icon-area" style="background: rgba(247,147,79,0.1);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f7934f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 5.34L6.75 6.75M19.07 19.07l-1.41-1.41M5.34 18.66l1.41-1.41M21 12h-2M5 12H3M12 21v-2M12 5V3"/></svg>
+      </div>
+      <div class="hobby-title">Automotive</div>
+      <div class="hobby-desc">A passion for cars and motorsport — hands-on mechanical interest that feeds directly into the Eco Racing project.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<div class="contact-section">
+  <h2>Get in touch</h2>
+  <p>Open to research collaborations, industry connections, and internship conversations.</p>
+  <div class="contact-links">
+    <a href="https://github.com/EthanW-Elec" class="contact-link" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.56 21.8 24 17.3 24 12 24 5.37 18.63 0 12 0z"/></svg>
+      github.com/EthanW-Elec
+    </a>
+    <a href="mailto:ethan@example.com" class="contact-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+      Email
+    </a>
+    <a href="https://linkedin.com" class="contact-link" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+      LinkedIn
+    </a>
+  </div>
+</div>
+
+<footer>
+  &copy; 2025 Ethan Wilkinson &mdash; built with GitHub Pages &nbsp;|&nbsp; EthanW-Elec
+</footer>
+
+</body>
+</html>
